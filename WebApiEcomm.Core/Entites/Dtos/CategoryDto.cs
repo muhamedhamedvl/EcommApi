@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 namespace WebApiEcomm.Core.Entites.Dtos
 {
     public record CategoryDto(string Name , String Description);
+    public record UpdateCategoryDto(int Id, string Name, string Description);
 }

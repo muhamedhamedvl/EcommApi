@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using WebApiEcomm.InfraStructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 namespace WebApiEcomm.API
 {
     public class Program
@@ -16,12 +17,13 @@ namespace WebApiEcomm.API
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
             builder.Services.InfrastructureConfiguration(builder.Configuration);
+            builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program).Assembly));
 
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger(); 
+                app.UseSwagger();
                 app.UseSwaggerUI();
             }
 

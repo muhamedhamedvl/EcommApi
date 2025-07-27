@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApiEcomm.Core.Interfaces.IUnitOfWork;
 
@@ -9,9 +10,11 @@ namespace WebApiEcomm.API.Controllers
     public class BaseController : ControllerBase
     {
         protected readonly IUnitOfWork _work;
-        public BaseController(IUnitOfWork work) 
+        protected readonly IMapper mapper;
+        public BaseController(IUnitOfWork work, IMapper mapper)
         {
             _work = work;
+            this.mapper = mapper;
         }
     }
 }

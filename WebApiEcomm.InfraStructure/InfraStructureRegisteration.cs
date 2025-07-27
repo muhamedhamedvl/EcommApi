@@ -20,6 +20,7 @@ namespace WebApiEcomm.InfraStructure
         {
             services.AddScoped(typeof(GenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
