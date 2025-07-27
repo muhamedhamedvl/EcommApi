@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApiEcomm.API.Helper;
 using WebApiEcomm.Core.Entites.Dtos;
 using WebApiEcomm.Core.Entites.Product;
 using WebApiEcomm.Core.Interfaces.IUnitOfWork;
@@ -23,13 +24,13 @@ namespace WebApiEcomm.API.Controllers
                 var categories = await _work.CategoryRepository.GetAllAsync();
                 if (categories == null || !categories.Any())
                 {
-                    return NotFound("No categories found.");
+                    return BadRequest(new ResponseApi(400));
                 }
                 return Ok(categories);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving data: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet("get-by-id/{id}")]
@@ -40,7 +41,7 @@ namespace WebApiEcomm.API.Controllers
                 var category = await _work.CategoryRepository.GetByIdAsync(id);
                 if (category == null)
                 {
-                    return NotFound($"Category with ID {id} not found.");
+                    return BadRequest(new ResponseApi(400));
                 }
                 return Ok(category);
             }
@@ -54,17 +55,17 @@ namespace WebApiEcomm.API.Controllers
         {
             if (categorydto == null)
             {
-                return BadRequest("Category data is null.");
+                return BadRequest(new ResponseApi(400));
             }
             try
             {
                 var newCategory = mapper.Map<Category>(categorydto);
                 await _work.CategoryRepository.AddAsync(newCategory);
-                return Ok(new { Message = "Item Has been Added" });
+                return Ok(new ResponseApi(200 , "Item has been added"));
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error creating category: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
         [HttpPut("update")]
@@ -74,21 +75,25 @@ namespace WebApiEcomm.API.Controllers
             {
                 var  category = mapper.Map<Category>(updatecategorydto);
                 await _work.CategoryRepository.UpdateAsync(category);
-                return Ok(new { Message = "Item Has been Updated" });
+                return Ok(new ResponseApi(200 , "Item has been updated"));
             }
             catch(Exception ex)
             {
-                throw new Exception($"Error updating category: {ex.Message}");
+                return BadRequest (ex.Message);
             }
         }
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if(id <= 0)
+            {
+                return BadRequest(new ResponseApi(400));
+            }
             try
             {
                 var category = await _work.CategoryRepository.GetByIdAsync(id);
                 await _work.CategoryRepository.DeleteAsync(category);
-                return Ok(new { Message = "Item has been deleted" });
+                return Ok(new ResponseApi(200, "Item has been deleted"));
             }
             catch (Exception ex)
             {
