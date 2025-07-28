@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiEcomm.InfraStructure.Data;
 
@@ -10,9 +11,11 @@ using WebApiEcomm.InfraStructure.Data;
 namespace WebApiEcomm.InfraStructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250728135921_editedfordtos")]
+    partial class editedfordtos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,20 +74,6 @@ namespace WebApiEcomm.InfraStructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Photos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ImageName = "smartphone.jpg",
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ImageName = "laptop.jpg",
-                            ProductId = 2
-                        });
                 });
 
             modelBuilder.Entity("WebApiEcomm.Core.Entites.Product.Product", b =>

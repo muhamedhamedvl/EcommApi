@@ -17,7 +17,6 @@ namespace WebApiEcomm.InfraStructure.Data.Config
             builder.Property(x => x.Name).IsRequired().HasMaxLength(40);
             builder.Property(x => x.Description).IsRequired().HasMaxLength(500);
             builder.Property(x => x.Price).IsRequired().HasColumnType("decimal(18,2)");
-            builder.HasOne(x => x.Category).WithMany(c => c.Products).HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Cascade);
             builder.HasData(
                 new Product
                 {

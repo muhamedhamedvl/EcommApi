@@ -8,8 +8,8 @@ namespace WebApiEcomm.API.Mapping
     {
         public CategoryMapping()
         {
-            CreateMap<CategoryDto, Category>().ReverseMap();
-            CreateMap<UpdateCategoryDto, Category>().ReverseMap();
+            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, UpdateCategoryDto>().ReverseMap();
         }
     }
 }

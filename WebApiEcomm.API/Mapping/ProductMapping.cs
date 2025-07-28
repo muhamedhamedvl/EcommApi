@@ -1,0 +1,20 @@
+﻿using AutoMapper;
+using WebApiEcomm.Core.Entites.Dtos;
+using WebApiEcomm.Core.Entites.Product;
+
+namespace WebApiEcomm.API.Mapping
+{
+    public class ProductMapping : Profile
+    {
+        public ProductMapping()
+        {
+            CreateMap<Product, ProductDto>()
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos.Select(p => p.ImageName).ToList()))
+                .ReverseMap();
+
+            CreateMap<Photo, PhotoDto>()
+                .ReverseMap();
+
+        }
+    }
+}
