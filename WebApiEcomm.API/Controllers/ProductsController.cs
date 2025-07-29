@@ -67,7 +67,19 @@ namespace WebApiEcomm.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpPost("Add-Product")]
+        public async Task<IActionResult> AddProduct(AddProductDto productdto)
+        {
+            try
+            {
+                await _work.ProductRepository.AddAsync(productdto);
+                return Ok(new ResponseApi(200 , "Product Added successfully"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

@@ -11,6 +11,9 @@ using WebApiEcomm.InfraStructure.Data;
 using Microsoft.EntityFrameworkCore;
 using WebApiEcomm.InfraStructure.Repositores.UnitOfWork;
 using WebApiEcomm.InfraStructure.Repositories;
+using WebApiEcomm.Core.Services;
+using WebApiEcomm.InfraStructure.Repositores.Service;
+using Microsoft.Extensions.FileProviders;
 
 namespace WebApiEcomm.InfraStructure
 {
@@ -20,6 +23,8 @@ namespace WebApiEcomm.InfraStructure
         {
             services.AddScoped(typeof(GenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IImageManagementService, ImageManagementService>();
+            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
             services.AddDbContext<AppDbContext>(options =>
             {

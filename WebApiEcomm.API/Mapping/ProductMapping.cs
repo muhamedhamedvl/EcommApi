@@ -14,6 +14,8 @@ namespace WebApiEcomm.API.Mapping
 
             CreateMap<Photo, PhotoDto>()
                 .ReverseMap();
+            CreateMap<AddProductDto, Product>().ForMember(m => m.Photos, op => op.Ignore())
+                .ReverseMap();
 
         }
     }

@@ -8,6 +8,6 @@ namespace WebApiEcomm.Core.Interfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-
+        Task<bool> AddAsync(AddProductDto productDTO);
     }
 }

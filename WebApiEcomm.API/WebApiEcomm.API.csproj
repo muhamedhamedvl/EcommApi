@@ -30,4 +30,8 @@
     <ProjectReference Include="..\WebApiEcomm.InfraStructure\WebApiEcomm.InfraStructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
