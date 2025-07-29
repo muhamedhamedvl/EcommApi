@@ -58,15 +58,16 @@ namespace WebApiEcomm.API.Controllers
                     return NotFound(new ResponseApi(404, "Product not found."));
                 }
 
-                var productDto = mapper.Map<ProductDto>(product);
+                var res = mapper.Map<ProductDto>(product);
 
-                return Ok(productDto);
+                return Ok(res);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
 
     }
 }

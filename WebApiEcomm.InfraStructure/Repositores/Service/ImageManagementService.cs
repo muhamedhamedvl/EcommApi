@@ -31,7 +31,9 @@ namespace WebApiEcomm.InfraStructure.Repositores.Service
             {
                 if (item.Length > 0)
                 {
+                    //get Image Name
                     var ImageName = item.FileName;
+                    //create Image Path 
                     var ImageSrc = $"/Images/{src}/{ImageName}";
                     var root = Path.Combine(ImageDirectory, ImageName);
 
