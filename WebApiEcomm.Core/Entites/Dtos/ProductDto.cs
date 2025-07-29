@@ -12,7 +12,9 @@ namespace WebApiEcomm.Core.Entites.Dtos
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
-        public virtual List<Photo> Photos { get; set; }
+
+        public List<string> Photos { get; set; } = new();
+
         public string CategoryName { get; set; }
     }
 
