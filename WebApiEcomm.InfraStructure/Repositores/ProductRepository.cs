@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WebApiEcomm.Core.Entites.Dtos;
 using WebApiEcomm.Core.Entites.Product;
 using WebApiEcomm.Core.Interfaces;
 using WebApiEcomm.Core.Services;
@@ -17,7 +13,9 @@ namespace WebApiEcomm.InfraStructure.Repositories
         private readonly AppDbContext context;
         private readonly IMapper mapper;
         private readonly IImageManagementService imageManagementService;
-        public ProductRepository(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService) : base(context)
+
+        public ProductRepository(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService)
+            : base(context)
         {
             this.context = context;
             this.mapper = mapper;
@@ -26,20 +24,61 @@ namespace WebApiEcomm.InfraStructure.Repositories
 
         public async Task<bool> AddAsync(AddProductDto productDTO)
         {
-            if (productDTO == null)return false;
+            if (productDTO == null) return false;
+
             var product = mapper.Map<Product>(productDTO);
             await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
 
-            var ImagePath = await imageManagementService.AddImageAsync(productDTO.Photo, productDTO.Name);
+            var imagePaths = await imageManagementService.AddImageAsync(productDTO.Photo, productDTO.Name);
 
-            var Photo = ImagePath.Select(a => new Photo
+            var photos = imagePaths.Select(a => new Photo
             {
                 ImageName = a,
                 ProductId = product.Id
             }).ToList();
-            context.Photos.AddRangeAsync(Photo);
+
+            await context.Photos.AddRangeAsync(photos);
             await context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UpdateAsync(UpdateProductDto updateproductDTO)
+        {
+            if (updateproductDTO is null) return false;
+
+            var product = await context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Photos)
+                .FirstOrDefaultAsync(p => p.Id == updateproductDTO.Id);
+
+            if (product == null) return false;
+
+            mapper.Map(updateproductDTO, product);
+
+            var oldPhotos = await context.Photos
+                .Where(p => p.ProductId == product.Id)
+                .ToListAsync();
+
+            foreach (var item in oldPhotos)
+            {
+                await imageManagementService.DeleteImageAsync(item.ImageName);
+            }
+
+            context.Photos.RemoveRange(oldPhotos);
+
+            var newImagePaths = await imageManagementService.AddImageAsync(updateproductDTO.Photo, updateproductDTO.Name);
+
+            var newPhotos = newImagePaths.Select(a => new Photo
+            {
+                ImageName = a,
+                ProductId = product.Id
+            }).ToList();
+
+            await context.Photos.AddRangeAsync(newPhotos);
+            await context.SaveChangesAsync();
+
             return true;
         }
     }

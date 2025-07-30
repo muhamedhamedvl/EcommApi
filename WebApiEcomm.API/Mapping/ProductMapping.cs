@@ -9,14 +9,18 @@ namespace WebApiEcomm.API.Mapping
         public ProductMapping()
         {
             CreateMap<Product, ProductDto>()
-                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos.Select(p => p.ImageName).ToList()))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos.Select(p => p.ImageName).ToList()));
+
+            CreateMap<Photo, PhotoDto>().ReverseMap();
+
+            CreateMap<AddProductDto, Product>()
+                .ForMember(m => m.Photos, op => op.Ignore())
                 .ReverseMap();
 
-            CreateMap<Photo, PhotoDto>()
+            CreateMap<UpdateProductDto, Product>()
+                .ForMember(m => m.Photos, op => op.Ignore())
                 .ReverseMap();
-            CreateMap<AddProductDto, Product>().ForMember(m => m.Photos, op => op.Ignore())
-                .ReverseMap();
-
         }
     }
 }

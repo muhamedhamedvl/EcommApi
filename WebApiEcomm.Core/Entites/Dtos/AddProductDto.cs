@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApiEcomm.Core.Entites.Product
+namespace WebApiEcomm.Core.Entites.Dtos
 {
     public record AddProductDto
     {
