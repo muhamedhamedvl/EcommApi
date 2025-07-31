@@ -81,5 +81,22 @@ namespace WebApiEcomm.InfraStructure.Repositories
 
             return true;
         }
+
+        async Task IProductRepository.DeleteAsync(Product product)
+        {
+            var photo = await 
+                 context
+                .Photos
+                .Where(p => p.ProductId == product.Id)
+                .ToListAsync();
+
+            foreach (var item in photo)
+            {
+                await imageManagementService.DeleteImageAsync(item.ImageName);
+            }
+            context.Products.Remove(product);
+            context.Photos.RemoveRange(photo);
+            await context.SaveChangesAsync();
+        }
     }
 }

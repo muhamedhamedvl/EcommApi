@@ -11,5 +11,6 @@ namespace WebApiEcomm.Core.Interfaces
     {
         Task<bool> AddAsync(AddProductDto productDTO);
         Task<bool> UpdateAsync(UpdateProductDto updateproductDTO);
+        Task DeleteAsync(Product product);
     }
 }

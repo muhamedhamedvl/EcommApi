@@ -17,6 +17,8 @@ namespace WebApiEcomm.InfraStructure.Data
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Photo> Photos { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

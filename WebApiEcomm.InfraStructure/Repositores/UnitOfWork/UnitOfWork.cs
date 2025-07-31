@@ -29,7 +29,7 @@ namespace WebApiEcomm.InfraStructure.Repositores.UnitOfWork
             this.imageManagementService = imageManagementService;
             CategoryRepository = new CategoryRepository(_context);
             ProductRepository = new ProductRepository(_context , mapper , imageManagementService);
-            PhotoRepository = new PhotoRepository(_context); 
+            PhotoRepository = new PhotoRepository(_context);
         }
     }
 }

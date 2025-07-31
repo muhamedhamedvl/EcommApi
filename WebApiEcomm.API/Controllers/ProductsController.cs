@@ -104,7 +104,7 @@ namespace WebApiEcomm.API.Controllers
 
                 await _work.ProductRepository.DeleteAsync(product);
 
-                return Ok(value: new ResponseApi(200));
+                return Ok(new ResponseApi(200, "Product has been deleted"));
             }
             catch (Exception ex)
             {
