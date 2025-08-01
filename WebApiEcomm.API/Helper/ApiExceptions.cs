@@ -2,10 +2,12 @@
 {
     public class ApiExceptions : ResponseApi
     {
-        public ApiExceptions(string message, string details, int statusCode = 500) : base(statusCode, message)
+        public ApiExceptions(int statusCode, string message, string details = "")
+            : base(statusCode, message)
         {
             Details = details;
         }
+
         public string Details { get; set; } = string.Empty;
     }
 }
