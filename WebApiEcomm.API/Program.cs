@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using WebApiEcomm.InfraStructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApiEcomm.API.Middleware;
 
 namespace WebApiEcomm.API
 {
@@ -26,6 +27,7 @@ namespace WebApiEcomm.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<ExceptionsMiddleware>();
             app.UseStatusCodePagesWithReExecute("/errors/{0 }");
             app.UseHttpsRedirection();
 
