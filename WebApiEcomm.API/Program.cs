@@ -14,6 +14,7 @@ namespace WebApiEcomm.API
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddEndpointsApiExplorer();
 
+            builder.Services.AddMemoryCache();
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
