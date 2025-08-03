@@ -21,11 +21,12 @@ namespace WebApiEcomm.API.Controllers
         {
             try
             {
-                var products = await 
+                var Product = await 
                     _work
                     .ProductRepository
                     .GetAllAsync(productParams);
-                return Ok(products);
+                var totalCount = await _work.ProductRepository.CountAsync();
+                return Ok(new Pagination<ProductDto>(productParams.PageNumber , productParams.PageSize , totalCount , Product));
                 
             }
             catch (Exception ex)

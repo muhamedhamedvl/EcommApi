@@ -14,5 +14,6 @@ namespace WebApiEcomm.Core.Interfaces
         Task<T> GetByIdAsync(int id);
         Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
         Task<T> UpdateAsync(T entity);
+        Task<int> CountAsync();
     }
 }

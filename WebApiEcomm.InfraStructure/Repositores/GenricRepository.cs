@@ -5,14 +5,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WebApiEcomm.Core.Interfaces;
+using WebApiEcomm.InfraStructure.Data;
 
 namespace WebApiEcomm.InfraStructure.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly DbContext _context;
+        private readonly AppDbContext _context;
 
-        public GenericRepository(DbContext context)
+        public GenericRepository(AppDbContext context)
         {
             _context = context;
         }
@@ -27,6 +28,7 @@ namespace WebApiEcomm.InfraStructure.Repositories
             return _context.SaveChangesAsync();
         }
 
+        public async Task<int> CountAsync() => await _context.Set<T>().CountAsync();
         public Task<T> DeleteAsync(T entity)
         {
             if (entity is null)
