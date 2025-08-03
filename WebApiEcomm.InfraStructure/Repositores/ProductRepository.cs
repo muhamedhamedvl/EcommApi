@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using WebApiEcomm.Core.Entites.Dtos;
 using WebApiEcomm.Core.Entites.Product;
 using WebApiEcomm.Core.Interfaces;
 using WebApiEcomm.Core.Services;
+using WebApiEcomm.Core.Sharing;
 using WebApiEcomm.InfraStructure.Data;
 
 namespace WebApiEcomm.InfraStructure.Repositories
@@ -21,7 +23,34 @@ namespace WebApiEcomm.InfraStructure.Repositories
             this.mapper = mapper;
             this.imageManagementService = imageManagementService;
         }
+        public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams)
+        {
+            var query = context.Products
+                .Include(m => m.Category)
+                .Include(m => m.Photos)
+                .AsNoTracking();
 
+            //Filtering By CategoryId
+            if (productParams.CategoryId.HasValue)
+            {
+                query = query.Where(m => m.CategoryId == productParams.CategoryId);
+            }
+            //Fiter By Price
+            if (!string.IsNullOrEmpty(productParams.sort))
+            {
+                query = productParams.sort switch
+                {
+                    "PriceAsn" => query.OrderBy(m => m.NewPrice),
+                    "PriceDes" => query.OrderByDescending(m => m.NewPrice),
+                    _ => query.OrderBy(m => m.Name),
+                };
+            }
+            //Pigenation
+            query = query.Skip(productParams.PageSize * (productParams.PageNumber - 1)).Take(productParams.PageSize);
+
+            var res = mapper.Map<List<ProductDto>>(query);
+            return res;
+        }
         public async Task<bool> AddAsync(AddProductDto productDTO)
         {
             if (productDTO == null) return false;

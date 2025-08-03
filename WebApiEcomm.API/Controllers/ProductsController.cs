@@ -3,34 +3,30 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiEcomm.API.Helper;
 using WebApiEcomm.Core.Entites.Dtos;
 using WebApiEcomm.Core.Interfaces.IUnitOfWork;
+using WebApiEcomm.Core.Services;
+using WebApiEcomm.Core.Sharing;
 
 namespace WebApiEcomm.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ProductsController : BaseController
     {
-        public ProductsController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
+        private readonly IImageManagementService imageManagementService;
+        public ProductsController(IUnitOfWork work, IMapper mapper, IImageManagementService imageManagementService) : base(work, mapper)
         {
+            this.imageManagementService = imageManagementService;
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts([FromQuery]ProductParams productParams)
         {
             try
             {
-                var products = await _work.ProductRepository.GetAllAsync(
-                    p => p.Category,
-                    p => p.Photos
-                );
-
-                if (!products?.Any() ?? true)
-                {
-                    return NotFound(new ResponseApi(404, "No products found."));
-                }
-
-                var result = mapper.Map<List<ProductDto>>(products);
-                return Ok(result);
+                var products = await 
+                    _work
+                    .ProductRepository
+                    .GetAllAsync(productParams);
+                return Ok(products);
+                
             }
             catch (Exception ex)
             {

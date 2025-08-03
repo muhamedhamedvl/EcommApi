@@ -26,15 +26,21 @@ namespace WebApiEcomm.API.Middleware
             {
                 ApplySecurityHeaders(context);
 
-                if (IsRequestAllowed(context) == false)
+                if (!IsRequestAllowed(context))
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests; //429
+                    context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
                     context.Response.ContentType = "application/json";
 
-                    var response =
-                        new ApiExceptions((int)HttpStatusCode.TooManyRequests, "Too many requests. Please try again later.");//Handeled the requests
+                    var response = new ApiExceptions(
+                        (int)HttpStatusCode.TooManyRequests,
+                        "Too many requests. Please try again later."
+                    );
+
                     await context.Response.WriteAsJsonAsync(response);
+                    return; 
                 }
+
+                await _next(context); 
             }
             catch (Exception ex)
             {

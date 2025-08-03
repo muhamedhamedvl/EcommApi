@@ -7,7 +7,8 @@ namespace WebApiEcomm.Core.Entites.Dtos
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public float Price { get; set; }
+        public float NewPrice { get; set; }
+        public float OldPrice { get; set; }
         public List<string> Photos { get; set; }
         public string CategoryName { get; set; }
     }
