@@ -24,6 +24,8 @@ namespace WebApiEcomm.API.Middleware
         {
             try
             {
+                ApplySecurityHeaders(context);
+
                 if (IsRequestAllowed(context) == false)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests; //429
@@ -74,6 +76,15 @@ namespace WebApiEcomm.API.Middleware
             {
                 return false;
             }
+        }
+
+        private void ApplySecurityHeaders(HttpContext context)
+        {
+            context.Response.Headers.Add("X-Content-Type-Options","nosniff");
+            context.Response.Headers.Add("X-Frame-Options", "DENY");
+            context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+            context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+            context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'"); 
         }
     }
 }
