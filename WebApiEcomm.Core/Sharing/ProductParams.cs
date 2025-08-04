@@ -13,6 +13,8 @@ namespace WebApiEcomm.Core.Sharing
 
         public int? CategoryId {  get; set; }
 
+        //Smart Search
+        public string Search {  get; set; }
         public int MaxPageSize { get; set; } = 6;
 
         private int _PageSize = 3;

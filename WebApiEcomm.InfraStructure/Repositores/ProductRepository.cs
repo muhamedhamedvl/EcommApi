@@ -29,6 +29,15 @@ namespace WebApiEcomm.InfraStructure.Repositories
                 .Include(m => m.Category)
                 .Include(m => m.Photos)
                 .AsNoTracking();
+            //Filtering by Word => Search
+            if (!string.IsNullOrEmpty(productParams.Search))
+            {
+                var searchwords = productParams.Search.Split(' ');
+                query = query.Where(m => searchwords.All(word =>
+                    m.Name.ToLower().Contains(word.ToLower()) ||
+                    m.Description.ToLower().Contains(word.ToLower())
+                ));
+            }
 
             //Filtering By CategoryId
             if (productParams.CategoryId.HasValue)
