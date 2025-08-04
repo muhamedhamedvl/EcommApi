@@ -8,8 +8,6 @@ using WebApiEcomm.Core.Interfaces.IUnitOfWork;
 
 namespace WebApiEcomm.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class CategoriesController : BaseController
     {
         public CategoriesController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
