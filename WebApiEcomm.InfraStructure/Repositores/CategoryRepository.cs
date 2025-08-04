@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiEcomm.Core.Entites.Product;
 using WebApiEcomm.Core.Interfaces;
+using WebApiEcomm.InfraStructure.Data;
 using WebApiEcomm.InfraStructure.Repositories;
 
 namespace WebApiEcomm.InfraStructure.Repositores
 {
     public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
-        public CategoryRepository(DbContext context) : base(context)
+        public CategoryRepository(AppDbContext context) : base(context)
         {
         }
     }
