@@ -13,7 +13,17 @@ namespace WebApiEcomm.API
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddEndpointsApiExplorer();
-
+            builder.Services.AddCors(op =>
+            {
+                op.AddPolicy("CORSPolicy", builder =>
+                {
+                    builder
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .WithOrigins("https://localhost:4200");
+                });
+            });
             builder.Services.AddMemoryCache();
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -28,6 +38,7 @@ namespace WebApiEcomm.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("CORSPolicy");
             app.UseMiddleware<ExceptionsMiddleware>();
             app.UseStatusCodePagesWithReExecute("/errors/{0 }");
             app.UseHttpsRedirection();
