@@ -14,6 +14,7 @@ using WebApiEcomm.InfraStructure.Repositories;
 using WebApiEcomm.Core.Services;
 using WebApiEcomm.InfraStructure.Repositores.Service;
 using Microsoft.Extensions.FileProviders;
+using StackExchange.Redis;
 
 namespace WebApiEcomm.InfraStructure
 {
@@ -25,7 +26,12 @@ namespace WebApiEcomm.InfraStructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IImageManagementService, ImageManagementService>();
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-
+            //Apply redis
+            services.AddSingleton<IConnectionMultiplexer>(i =>
+            {
+                var config = ConfigurationOptions.Parse(configuration.GetConnectionString("redis"));
+                return ConnectionMultiplexer.Connect(config);
+            });
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
