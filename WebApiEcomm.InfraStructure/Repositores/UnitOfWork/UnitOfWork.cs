@@ -22,14 +22,18 @@ namespace WebApiEcomm.InfraStructure.Repositores.UnitOfWork
         public IProductRepository ProductRepository { get; }
 
         public IPhotoRepository PhotoRepository { get; }
-        public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService)
+
+        public ICustomerBasketRepository CustomerBasketRepository { get; }
+
+        public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService, ICustomerBasketRepository customerBasketRepository)
         {
             this._context = context;
             this.mapper = mapper;
             this.imageManagementService = imageManagementService;
             CategoryRepository = new CategoryRepository(_context);
-            ProductRepository = new ProductRepository(_context , mapper , imageManagementService);
+            ProductRepository = new ProductRepository(_context, mapper, imageManagementService);
             PhotoRepository = new PhotoRepository(_context);
+            CustomerBasketRepository = customerBasketRepository;
         }
     }
 }
