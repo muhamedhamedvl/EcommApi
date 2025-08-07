@@ -12,11 +12,11 @@ namespace WebApiEcomm.Core.Entites.Basket
         {
             
         }
-        public CustomerBasket(int Id)
+        public CustomerBasket(string Id)
         { 
             this.Id = Id;
         }
-        public int Id { get; set; }
+        public string Id { get; set; }
         public List<BasketItems> basketItems { get; set; } = new List<BasketItems>();
     }
 }
