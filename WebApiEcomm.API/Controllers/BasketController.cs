@@ -17,6 +17,11 @@ namespace WebApiEcomm.API.Controllers
         public async Task<IActionResult> GetBasket(string id)
         {
             var res = await _work.CustomerBasketRepository.GetCustomerBasketAsync(id);
+            if (res is null) 
+            { 
+                return Ok(new CustomerBasket());
+
+            }
             return Ok(res);
         }
         [HttpPut("update-Basket")]
