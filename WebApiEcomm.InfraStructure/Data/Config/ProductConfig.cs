@@ -16,7 +16,9 @@ namespace WebApiEcomm.InfraStructure.Data.Config
             builder.Property(x => x.Id).IsRequired();
             builder.Property(x => x.Name).IsRequired().HasMaxLength(40);
             builder.Property(x => x.Description).IsRequired().HasMaxLength(500);
-            builder.Property(x => x.NewPrice).IsRequired().HasColumnType("decimal(18,2)");
+            builder.Property(x => x.NewPrice).HasColumnType("decimal(18,2)");
+            builder.Property(x => x.OldPrice).HasColumnType("decimal(18,2)");
+
         }
     }
 }
