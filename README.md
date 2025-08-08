@@ -20,10 +20,31 @@ The backend is responsible for **product management**, **shopping basket handlin
 ---
 
 ## 📂 Project Structure
-ECommerce.sln
-├── API # Presentation layer (Controllers, Middleware, Swagger)
-├── Core # Entities, DTOs, Interfaces, Specifications
-├── Infrastructure # EF Core, Repositories, Identity, Data Seeding
+
+```
+ECommerce.sln                     # Solution file
+
+├── API/                           # Presentation Layer
+│   ├── Controllers/               # API endpoints
+│   ├── Extensions/                # Service & middleware extensions
+│   ├── Middleware/                 # Global error handling, logging
+│   ├── Helpers/                    # Pagination, filtering helpers
+│   └── Program.cs                  # App startup
+
+├── Core/                          # Domain Layer
+│   ├── Entities/                   # Domain models (Product, Order, Basket, etc.)
+│   ├── DTOs/                       # Data Transfer Objects
+│   ├── Interfaces/                 # Abstractions for repositories & services
+│   └── Specifications/             # Query filtering logic
+
+├── Infrastructure/                # Data Access Layer
+│   ├── Data/                        # EF Core DbContext, Migrations
+│   ├── Identity/                    # ASP.NET Core Identity setup
+│   ├── Repositories/                # Repository implementations
+│   └── Seed/                        # Initial database seeding
+
+```
+
 
 
 ---
