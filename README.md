@@ -106,15 +106,6 @@ dotnet run --project API
     API -->|PaymentIntent| Stripe[(Stripe API)]
     Stripe -->|Webhook| API
 
-## Coming soon
-Admin dashboard for product/order management
-
-Email notifications for orders
-
-Multi-language support
-
-Advanced search with ElasticSearch
-
 ## 👨‍💻 Author
 
 **Mohamed Hamed**  
