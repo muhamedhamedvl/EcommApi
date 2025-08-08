@@ -50,3 +50,55 @@ ECommerce.sln
 ```bash
 git clone https://github.com/muhamedhamedvl/EcommApi
 cd ecommerce-backend
+```
+
+### 2️⃣ Apply migrations & seed data
+```bash
+dotnet ef database update
+```
+
+### 3️⃣ Run the project
+```bash
+dotnet run --project API
+```
+
+#### 🏗 API Endpoints Overview
+
+| Endpoint                | Method | Description                 | Auth |
+| ----------------------- | ------ | --------------------------- | ---- |
+| `/api/products`         | GET    | List all products           | ❌    |
+| `/api/products/{id}`    | GET    | Get product details         | ❌    |
+| `/api/basket`           | GET    | Get basket                  | ✅    |
+| `/api/basket`           | POST   | Create/Update basket        | ✅    |
+| `/api/orders`           | POST   | Create new order            | ✅    |
+| `/api/payments`         | POST   | Create Stripe PaymentIntent | ✅    |
+| `/api/account/login`    | POST   | Login                       | ❌    |
+| `/api/account/register` | POST   | Register                    | ❌    |
+
+
+### Backend Flow Diagram
+## flowchart LR
+    User[Frontend User] -->|HTTP Request| API[ASP.NET Core API]
+    API -->|Query| Repo[Repository Layer]
+    Repo -->|EF Core| DB[(SQL Server)]
+    API -->|Cache Basket| Redis[(Redis Cache)]
+    API -->|PaymentIntent| Stripe[(Stripe API)]
+    Stripe -->|Webhook| API
+
+## Coming soon
+Admin dashboard for product/order management
+
+Email notifications for orders
+
+Multi-language support
+
+Advanced search with ElasticSearch
+
+## 👨‍💻 Author
+
+**Mohamed Hamed**  
+_Backend Developer – ASP.NET Core & Clean Architecture Enthusiast_  
+
+📧 **Email:** [mh1191128@gmail.com](mailto:mh1191128@gmail.com)  
+🔗 **LinkedIn:** [linkedin.com/in/muhamed-hamed-muhamed-3a2a25250](https://www.linkedin.com/in/muhamed-hamed-muhamed-3a2a25250/)  
+💻 **GitHub:** [github.com/yourusername](https://github.com/yourusername)
