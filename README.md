@@ -70,7 +70,7 @@ ECommerce.sln                     # Solution file
 ### 1️⃣ Clone the repository
 ```bash
 git clone https://github.com/muhamedhamedvl/EcommApi
-cd ecommerce-backend
+cd EcommApi
 ```
 
 ### 2️⃣ Apply migrations & seed data
