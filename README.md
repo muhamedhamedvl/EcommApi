@@ -109,7 +109,7 @@ dotnet run --project API
 ## 👨‍💻 Author
 
 **Mohamed Hamed**  
-_Backend Developer – ASP.NET Core & Clean Architecture Enthusiast_  
+_Backend Developer – ASP.NET Core 
 
 📧 **Email:** [mh1191128@gmail.com](mailto:mh1191128@gmail.com)  
 🔗 **LinkedIn:** [linkedin.com/in/muhamed-hamed-muhamed-3a2a25250](https://www.linkedin.com/in/muhamed-hamed-muhamed-3a2a25250/)  
