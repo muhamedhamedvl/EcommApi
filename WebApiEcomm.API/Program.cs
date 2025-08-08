@@ -1,9 +1,11 @@
-
 using Microsoft.AspNetCore.Builder;
 using WebApiEcomm.InfraStructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApiEcomm.API.Middleware;
+using Microsoft.AspNetCore.Identity;
+using WebApiEcomm.Core.Entites.Identity;
+using WebApiEcomm.InfraStructure.Data;
 
 namespace WebApiEcomm.API
 {
@@ -12,7 +14,9 @@ namespace WebApiEcomm.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddCors(op =>
             {
                 op.AddPolicy("CORSPolicy", builder =>
@@ -24,11 +28,26 @@ namespace WebApiEcomm.API
                     .WithOrigins("https://localhost:4200");
                 });
             });
+
             builder.Services.AddMemoryCache();
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDataProtection();
+
+            builder.Services.AddIdentityCore<AppUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddSignInManager<SignInManager<AppUser>>()
+                .AddDefaultTokenProviders();
+
+            
             builder.Services.InfrastructureConfiguration(builder.Configuration);
+
             builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program).Assembly));
 
             var app = builder.Build();
@@ -38,11 +57,13 @@ namespace WebApiEcomm.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseCors("CORSPolicy");
             app.UseMiddleware<ExceptionsMiddleware>();
-            app.UseStatusCodePagesWithReExecute("/errors/{0 }");
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
 
+            app.UseAuthentication(); 
             app.UseAuthorization();
 
             app.MapControllers();
