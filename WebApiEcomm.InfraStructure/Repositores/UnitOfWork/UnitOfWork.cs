@@ -23,6 +23,8 @@ namespace WebApiEcomm.InfraStructure.Repositores.UnitOfWork
         private readonly IImageManagementService imageManagementService;
         private readonly IConnectionMultiplexer redis;
         private readonly UserManager<AppUser> userManager;
+        private readonly IEmailService emailService;
+        private readonly SignInManager<AppUser> signInManager;  
 
         public ICategoryRepository CategoryRepository { get; }
 
@@ -35,18 +37,21 @@ namespace WebApiEcomm.InfraStructure.Repositores.UnitOfWork
         public IAuth Auth { get; }
 
         public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService
-             , IConnectionMultiplexer redis, UserManager<AppUser> userManager)
+             , IConnectionMultiplexer redis, UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager)
         {
             this._context = context;
             this.mapper = mapper;
             this.imageManagementService = imageManagementService;
             this.redis = redis;
             this.userManager = userManager;
+            this.emailService = emailService;
+            this.signInManager = signInManager;
             CategoryRepository = new CategoryRepository(_context);
             ProductRepository = new ProductRepository(_context, mapper, imageManagementService);
             PhotoRepository = new PhotoRepository(_context);
             CustomerBasketRepository = new CustomerBasketRepository(redis);
-            Auth = new AuthRepository(userManager);
+            Auth = new AuthRepository(userManager , emailService , signInManager);
+
         }
     }
 }
