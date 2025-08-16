@@ -1,10 +1,10 @@
 ﻿namespace WebApiEcomm.Core.Entites.Order
 {
-    public class ShippingAddress :BaseEntity
+    public class ShippingAddress : BaseEntity
     {
         public ShippingAddress()
         {
-            
+
         }
         public ShippingAddress(string firstName, string lastName, string city, string zipCode, string street, string state)
         {
