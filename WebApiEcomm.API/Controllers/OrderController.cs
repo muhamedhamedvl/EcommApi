@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebApiEcomm.Core.Entites.Dtos;
+using WebApiEcomm.Core.Entites.Order;
 using WebApiEcomm.Core.Services;
 
 namespace WebApiEcomm.API.Controllers
@@ -8,87 +10,44 @@ namespace WebApiEcomm.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OrderController : ControllerBase
+    public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
-
-        public OrderController(IOrderService orderService)
+        public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
         }
-        private string GetUserEmail() =>
-            User?.Claims.FirstOrDefault(c => c.Type == "email")?.Value ?? string.Empty;
-
-        [HttpPost("CreateOrder")]
-        public async Task<IActionResult> CreateOrderAsync([FromBody] OrderDto orderDto)
+        [HttpPost("create-order")]
+        public async Task<ActionResult> create(OrderDto orderDTO)
         {
-            var email = GetUserEmail();
-            if (string.IsNullOrWhiteSpace(email))
-                return Unauthorized("Invalid user email.");
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
 
-            if (orderDto == null)
-                return BadRequest("Invalid order data.");
+            Order order = await _orderService.CreateOrdersAsync(orderDTO, email);
 
-            var result = await _orderService.CreateOrderAsync(orderDto, email);
-            return result
-                ? Ok("Order created successfully.")
-                : BadRequest("Failed to create order.");
+            return Ok(order);
         }
 
-        [HttpGet("GetOrdersByUserId")]
-        public async Task<IActionResult> GetOrdersByUserIdAsync()
-        {
-            var email = GetUserEmail();
-            if (string.IsNullOrWhiteSpace(email))
-                return Unauthorized("Invalid user email.");
 
-            var orders = await _orderService.GetOrdersByUserIdAsync(email);
-            return (orders == null || !orders.Any())
-                ? NotFound("No orders found for this user.")
-                : Ok(orders);
+        [HttpGet("get-orders-for-user")]
+        public async Task<ActionResult<IReadOnlyList<OrderToReturnDTO>>> getorders()
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var order = await _orderService.GetAllOrdersForUserAsync(email);
+            return Ok(order);
         }
 
-        [HttpGet("GetOrderById/{orderId}")]
-        public async Task<IActionResult> GetOrderByIdAsync(int orderId)
+
+        [HttpGet("get-order-by-id/{id}")]
+        public async Task<ActionResult<OrderToReturnDTO>> getOrderById(int id)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            return order == null
-                ? NotFound("Order not found.")
-                : Ok(order);
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var order = await _orderService.GetOrderByIdAsync(id, email);
+            return Ok(order);
         }
 
-        [HttpGet("GetDeliveryMethods")]
-        public async Task<IActionResult> GetDeliveryMethodsAsync()
-        {
-            var deliveryMethods = await _orderService.GetDeliveryMethodsAsync();
-            return (deliveryMethods == null || !deliveryMethods.Any())
-                ? NotFound("No delivery methods found.")
-                : Ok(deliveryMethods);
-        }
 
-        [HttpPut("UpdateOrderStatus/{orderId}")]
-        public async Task<IActionResult> UpdateOrderStatusAsync(int orderId)
-        {
-            var email = GetUserEmail();
-            if (string.IsNullOrWhiteSpace(email))
-                return Unauthorized("Invalid user email.");
-
-            var result = await _orderService.UpdateOrderStatusAsync(orderId, email);
-            return result
-                ? Ok("Order status updated successfully.")
-                : NotFound("Order not found or already processed.");
-        }
-        [HttpDelete("CancelOrder/{orderId}")]
-        public async Task<IActionResult> CancelOrderAsync(int orderId)
-        {
-            var email = GetUserEmail();
-            if (string.IsNullOrWhiteSpace(email))
-                return Unauthorized("Invalid user email.");
-
-            var result = await _orderService.CancelOrderAsync(orderId);
-            return result
-                ? Ok("Order cancelled successfully.")
-                : NotFound("Order not found or already processed.");
-        }
+        [HttpGet("get-delivery")]
+        public async Task<ActionResult> GetDeliver()
+        => Ok(await _orderService.GetDeliveryMethodAsync());
     }
 }
