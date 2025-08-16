@@ -8,11 +8,11 @@ namespace WebApiEcomm.InfraStructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.OwnsOne(x => x.shippingaddress, n =>
+            builder.OwnsOne(x => x.shippingAddress, n =>
             {
                 n.WithOwner();
             });
-            builder.HasMany(x => x.OrderItems)
+            builder.HasMany(x => x.orderItems)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.status)
