@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiEcomm.Core.Entites.Identity;
+using WebApiEcomm.Core.Entites.Order;
 using WebApiEcomm.Core.Entites.Product;
 namespace WebApiEcomm.InfraStructure.Data
 {
@@ -14,14 +15,14 @@ namespace WebApiEcomm.InfraStructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-        public DbSet<Product> Products { get; set; }
-
-        public DbSet<Category> Categories { get; set; }
-
-        public DbSet<Photo> Photos { get; set; }
-        public DbSet<Address> Addresses { get; set; }
-
-
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Photo> Photos { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); 
