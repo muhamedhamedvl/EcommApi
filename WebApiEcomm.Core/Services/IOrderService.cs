@@ -10,11 +10,9 @@ namespace WebApiEcomm.Core.Services
 {
     public interface IOrderService
     {
-        Task<bool> CreateOrderAsync(OrderDto orderDto , string BuyerEmail);
-        Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string BuyerEmail);
-        Task<Order> GetOrderByIdAsync(int orderId);
-        Task<bool> UpdateOrderStatusAsync(int orderId, string BuyerEmail);
-        Task<bool> CancelOrderAsync(int orderId);
-        Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync();
+        Task<Order> CreateOrdersAsync(OrderDto orderDTO, string BuyerEmail);
+        Task<IReadOnlyList<OrderToReturnDTO>> GetAllOrdersForUserAsync(string BuyerEmail);
+        Task<OrderToReturnDTO> GetOrderByIdAsync(int Id, string BuyerEmail);
+        Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodAsync();
     }
 }
