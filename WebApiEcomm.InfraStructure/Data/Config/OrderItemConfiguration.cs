@@ -15,10 +15,10 @@ namespace WebApiEcomm.InfraStructure.Data.Config
             builder.Property(x => x.Price)
                 .HasColumnType("decimal(18,2)");
 
-            builder.Property(x => x.Quantity)
+            builder.Property(x => x.Quntity)
                 .IsRequired();
 
-            builder.Property(x => x.ProductId)
+            builder.Property(x => x.Id)
                 .IsRequired();
 
             builder.Property(x => x.Id)
