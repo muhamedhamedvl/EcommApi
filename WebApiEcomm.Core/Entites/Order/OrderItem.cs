@@ -1,10 +1,10 @@
 ﻿namespace WebApiEcomm.Core.Entites.Order
 {
-    public class OrderItem:BaseEntity
+    public class OrderItem : BaseEntity
     {
         public OrderItem()
         {
-            
+
         }
         public OrderItem(int productId, string productName, decimal price, int quantity, string image)
         {
