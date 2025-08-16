@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebApiEcomm.Core.Entites.Dtos;
 using WebApiEcomm.Core.Entites.Order;
 using WebApiEcomm.Core.Interfaces.IUnitOfWork;
@@ -19,121 +14,73 @@ namespace WebApiEcomm.InfraStructure.Repositores.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public OrderService(IUnitOfWork unitOfWork, AppDbContext context, IMapper mapper)
+        private readonly IPaymentService _paymentService;
+
+        public OrderService(IUnitOfWork unitOfWork, AppDbContext context, IMapper mapper, IPaymentService paymentService)
         {
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
             _context = context;
             _mapper = mapper;
+            _paymentService = paymentService;
         }
-        public async Task<bool> CancelOrderAsync(int orderId)
+        public async Task<Order> CreateOrdersAsync(OrderDto orderDTO, string BuyerEmail)
         {
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order == null || order.status == Status.Shipped || order.status == Status.Cancelled)
-                return false;
+            var basket = await _unitOfWork.CustomerBasketRepository.GetCustomerBasketAsync(orderDTO.basketId);
 
-            order.status = Status.Cancelled;
-            return await _context.SaveChangesAsync() > 0;
-        }
+            List<OrderItem> orderItems = new List<OrderItem>();
 
-        public async Task<bool> CreateOrderAsync(OrderDto orderDto, string BuyerEmail)
-        {
-
-            if (orderDto == null || string.IsNullOrWhiteSpace(BuyerEmail))
-                return false;
-
-            var deliveryMethod = await _context.DeliveryMethods.FindAsync(orderDto.DelliveryMethodId);
-            if (deliveryMethod == null)
-                return false;
-
-            var shippingAddress = new ShippingAddressDto(
-                 orderDto.shipaddressdto.FirstName,
-                 orderDto.shipaddressdto.LastName,
-                 orderDto.shipaddressdto.City,
-                 orderDto.shipaddressdto.ZipCode,
-                 orderDto.shipaddressdto.Street,
-                 orderDto.shipaddressdto.State
-             );
-
-            var orderItems = new List<OrderItem>();
-            decimal subTotal = 0;
-
-            foreach (var item in orderDto.OrderItems)
+            foreach (var item in basket.basketItems)
             {
-                var product = await _context.Products.FindAsync(item.ProductId);
-                if (product == null)
-                    return false;
-
-                var orderItem = new OrderItem(
-                    product.Id,
-                    product.Name,
-                    product.NewPrice,
-                    item.Quantity,
-                    product.Photos?.FirstOrDefault()?.ImageName ?? string.Empty
-                );
+                var Product = await _unitOfWork.ProductRepository.GetByIdAsync(item.Id);
+                var orderItem = new OrderItem
+                    (Product.Id, item.Image, Product.Name, item.Price, item.Quantity);
                 orderItems.Add(orderItem);
-                subTotal += product.NewPrice * item.Quantity;
+
+            }
+            var deliverMethod = await _context.DeliveryMethods.FirstOrDefaultAsync(m => m.Id == orderDTO.DelliveryMethodId);
+
+            var subTotal = orderItems.Sum(m => m.Price * m.Quntity);
+
+            var ship = _mapper.Map<ShippingAddress>(orderDTO.shipaddressdto);
+
+            var ExisitOrder = await _context.Orders.Where(m => m.PaymentIntentId == basket.PaymentIntentId).FirstOrDefaultAsync();
+
+            if (ExisitOrder is not null)
+            {
+                _context.Orders.Remove(ExisitOrder);
+                await _paymentService.CreateOrUpdatePaymentAsync(basket.PaymentIntentId, deliverMethod.Id);
             }
 
-            var order = new Order(
-                BuyerEmail,
-                subTotal,
-                shippingAddress,
-                deliveryMethod,
-                orderItems,
-                paymentIntentId: null
-            )
-            {
-                status = Status.Pending,
-                OrderDate = DateTime.UtcNow
-            };
+            var order = new
+                Order(BuyerEmail, subTotal, ship, deliverMethod, orderItems, basket.PaymentIntentId);
+
             await _context.Orders.AddAsync(order);
-            var result = await _context.SaveChangesAsync();
-            return result > 0;
-        }
-        public async Task<Order> GetOrderByIdAsync(int orderId)
-        {
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order == null)
-                throw new KeyNotFoundException("Order not found");
+            await _context.SaveChangesAsync();
+            await _unitOfWork.CustomerBasketRepository.DeleteCustomerBasketAsync(orderDTO.basketId);
             return order;
+
         }
 
-        public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
+        public async Task<IReadOnlyList<OrderToReturnDTO>> GetAllOrdersForUserAsync(string BuyerEmail)
         {
-            var deliveryMethods = await _context.DeliveryMethods.ToListAsync();
-            if (deliveryMethods == null)
-                throw new KeyNotFoundException("Delivery methods not found");
-            return deliveryMethods;
-        }
-
-
-
-        public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string BuyerEmail)
-        {
-            if (string.IsNullOrWhiteSpace(BuyerEmail))
-                throw new ArgumentException("Buyer email cannot be null or empty", nameof(BuyerEmail));
-            var orders =await _context.Orders
-                .Where(o => o.BuyerEmail == BuyerEmail)
-                .Include(o => o.OrderItems)
-                .Include(o => o.deliveryMethod)
-                .Include(o => o.shippingaddress)
+            var orders = await _context.Orders.Where(m => m.BuyerEmail == BuyerEmail)
+                .Include(inc => inc.orderItems).Include(inc => inc.deliveryMethod)
                 .ToListAsync();
-            return orders;
+            var result = _mapper.Map<IReadOnlyList<OrderToReturnDTO>>(orders);
+            result = result.OrderByDescending(m => m.Id).ToList();
+            return result;
         }
 
-        public async Task<bool> UpdateOrderStatusAsync(int orderId, string BuyerEmail)
+        public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodAsync()
+        => await _context.DeliveryMethods.AsNoTracking().ToListAsync();
+
+        public async Task<OrderToReturnDTO> GetOrderByIdAsync(int Id, string BuyerEmail)
         {
-            if (string.IsNullOrWhiteSpace(BuyerEmail))
-                throw new ArgumentException("Buyer email cannot be null or empty", nameof(BuyerEmail));
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order == null)
-                return false;
-            if (order.status == Status.Shipped || order.status == Status.Cancelled)
-                return false;
-            order.status = Status.Shipped;
-            order.BuyerEmail = BuyerEmail;
-            var result = await _context.SaveChangesAsync();
-            return result > 0;
+            var order = await _context.Orders.Where(m => m.Id == Id && m.BuyerEmail == BuyerEmail)
+                  .Include(inc => inc.orderItems).Include(inc => inc.deliveryMethod)
+                  .FirstOrDefaultAsync();
+            var result = _mapper.Map<OrderToReturnDTO>(order);
+            return result;
         }
     }
 }
