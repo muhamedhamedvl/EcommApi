@@ -4,7 +4,7 @@
     {
         public DeliveryMethod()
         {
-            
+
         }
         public DeliveryMethod(string name, string deliveryTime, string description, decimal price)
         {
