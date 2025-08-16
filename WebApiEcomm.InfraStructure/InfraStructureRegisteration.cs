@@ -24,7 +24,6 @@ namespace WebApiEcomm.InfraStructure
         {
             services.AddScoped(typeof(GenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IGenrateToken, GenrateToken>(); 
             services.AddScoped<IEmailService, EmailService>();
             services.AddSingleton<IImageManagementService, ImageManagementService>();
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));

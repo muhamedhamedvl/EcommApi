@@ -268,102 +268,6 @@ namespace WebApiEcomm.InfraStructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("WebApiEcomm.Core.Entites.Order.DeliveryMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DeliveryTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeliveryMethods");
-                });
-
-            modelBuilder.Entity("WebApiEcomm.Core.Entites.Order.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("BuyerEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("SubTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("deliveryMethodId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("deliveryMethodId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("WebApiEcomm.Core.Entites.Order.OrderItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderItems");
-                });
-
             modelBuilder.Entity("WebApiEcomm.Core.Entites.Product.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -518,74 +422,12 @@ namespace WebApiEcomm.InfraStructure.Migrations
             modelBuilder.Entity("WebApiEcomm.Core.Entites.Identity.Address", b =>
                 {
                     b.HasOne("WebApiEcomm.Core.Entites.Identity.AppUser", "AppUser")
-                        .WithOne("Address")
+                        .WithOne("address")
                         .HasForeignKey("WebApiEcomm.Core.Entites.Identity.Address", "AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("WebApiEcomm.Core.Entites.Order.Order", b =>
-                {
-                    b.HasOne("WebApiEcomm.Core.Entites.Order.DeliveryMethod", "deliveryMethod")
-                        .WithMany()
-                        .HasForeignKey("deliveryMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("WebApiEcomm.Core.Entites.Order.ShippingAddress", "shippingaddress", b1 =>
-                        {
-                            b1.Property<int>("OrderId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<int>("Id")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("State")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("ZipCode")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("OrderId");
-
-                            b1.ToTable("Orders");
-
-                            b1.WithOwner()
-                                .HasForeignKey("OrderId");
-                        });
-
-                    b.Navigation("deliveryMethod");
-
-                    b.Navigation("shippingaddress")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WebApiEcomm.Core.Entites.Order.OrderItem", b =>
-                {
-                    b.HasOne("WebApiEcomm.Core.Entites.Order.Order", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WebApiEcomm.Core.Entites.Product.Photo", b =>
@@ -610,13 +452,8 @@ namespace WebApiEcomm.InfraStructure.Migrations
 
             modelBuilder.Entity("WebApiEcomm.Core.Entites.Identity.AppUser", b =>
                 {
-                    b.Navigation("Address")
+                    b.Navigation("address")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("WebApiEcomm.Core.Entites.Order.Order", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("WebApiEcomm.Core.Entites.Product.Product", b =>
