@@ -10,7 +10,7 @@ namespace WebApiEcomm.InfraStructure.Data.Config
         {
             builder.Property(x => x.ProductName)
                 .IsRequired()
-                .HasMaxLength(200); 
+                .HasMaxLength(200);
 
             builder.Property(x => x.Price)
                 .HasColumnType("decimal(18,2)");
