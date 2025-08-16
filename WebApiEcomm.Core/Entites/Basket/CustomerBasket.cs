@@ -18,5 +18,7 @@ namespace WebApiEcomm.Core.Entites.Basket
         }
         public string Id { get; set; }
         public List<BasketItems> basketItems { get; set; } = new List<BasketItems>();
+        public string PaymentIntentId { get; set; }
+        public string ClientSecret { get; set; }
     }
 }
