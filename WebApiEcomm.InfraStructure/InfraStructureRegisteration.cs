@@ -26,6 +26,8 @@ namespace WebApiEcomm.InfraStructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddSingleton<IImageManagementService, ImageManagementService>();
+            services.AddScoped<IGenrateToken, GenrateToken>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
             //Apply redis
             services.AddSingleton<IConnectionMultiplexer>(i =>
