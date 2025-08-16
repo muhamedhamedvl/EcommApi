@@ -8,29 +8,32 @@ namespace WebApiEcomm.Core.Entites.Order
 {
     public class Order : BaseEntity
     {
-        public Order()
-        {
-
-        }
-        public Order(string buyerEmail, decimal subTotal, ShippingAddress shippingaddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> orderItems)
+        public Order() { }
+        public Order(string buyerEmail, decimal subTotal, ShippingAddress shippingAddress, DeliveryMethod deliveryMethod, IReadOnlyList<OrderItem> orderItems, string PaymentIntentId)
         {
             BuyerEmail = buyerEmail;
             SubTotal = subTotal;
-            this.shippingaddress = shippingaddress;
+            this.shippingAddress = shippingAddress;
             this.deliveryMethod = deliveryMethod;
-            this.OrderItems = orderItems;
+            this.orderItems = orderItems;
+            this.PaymentIntentId = PaymentIntentId;
         }
 
         public string BuyerEmail { get; set; }
         public decimal SubTotal { get; set; }
-        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
-        public ShippingAddress shippingaddress { get; set; }
+        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public ShippingAddress shippingAddress { get; set; }
+        public string PaymentIntentId { get; set; }
+        public IReadOnlyList<OrderItem> orderItems { get; set; }
         public DeliveryMethod deliveryMethod { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+
         public Status status { get; set; } = Status.Pending;
-        public decimal GetTotalOrder()
+
+        public decimal GetTotal()
         {
             return SubTotal + deliveryMethod.Price;
         }
+
     }
 }

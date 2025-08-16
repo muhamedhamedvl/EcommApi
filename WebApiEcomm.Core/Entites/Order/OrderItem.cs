@@ -6,19 +6,20 @@
         {
 
         }
-        public OrderItem(int productId, string productName, decimal price, int quantity, string image)
+        public OrderItem(int productItemId, string mainImage, string productName, decimal price, int quntity)
         {
-            ProductId = productId;
-            Image = image;
+            ProductItemId = productItemId;
+            MainImage = mainImage;
             ProductName = productName;
             Price = price;
-            Quantity = quantity;
+            Quntity = quntity;
         }
-        public int ProductId { get; set; }
-        public string Image { get; set; }
+
+        public int ProductItemId { get; set; }
+        public string MainImage { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; }
-        public int Quantity { get; set; }
+        public int Quntity { get; set; }
     }
 
 }
