@@ -10,7 +10,7 @@ namespace WebApiEcomm.Core.Entites.Order
     {
         public Order()
         {
-            
+
         }
         public Order(string buyerEmail, decimal subTotal, ShippingAddress shippingaddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> orderItems)
         {
