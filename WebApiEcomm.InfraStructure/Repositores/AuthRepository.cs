@@ -1,4 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Org.BouncyCastle.Crypto.Macs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using WebApiEcomm.Core.Entites.Dtos;
 using WebApiEcomm.Core.Entites.Identity;
 using WebApiEcomm.Core.Interfaces.Auth;
@@ -11,18 +17,12 @@ namespace WebApiEcomm.InfraStructure.Repositores
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailService _emailService;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IGenrateToken genrateToken;
 
-        public AuthRepository(UserManager<AppUser> userManager
-            , IEmailService emailService
-            , SignInManager<AppUser> signInManager
-            , IGenrateToken genrateToken)
-
+        public AuthRepository(UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _emailService = emailService;
             _signInManager = signInManager;
-            this.genrateToken = genrateToken;
         }
         public async Task<AppUser> RegisterAsync(RegisterDto registerDto)
         {
@@ -79,74 +79,23 @@ namespace WebApiEcomm.InfraStructure.Repositores
 
             await _emailService.SendEmail(emailDto);
         }
-        public async Task<string> LoginAsync(LoginDto login)
+        public async Task<AppUser> LoginAsync(LoginDto loginDto)
         {
-            if (login == null)
+            if (loginDto == null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(loginDto));
             }
-
-            var finduser = await _userManager.FindByEmailAsync(login.Email);
-
-            if (!finduser.EmailConfirmed)
-            {
-                string token = await _userManager.GenerateEmailConfirmationTokenAsync(finduser);
-                await SendEmail(finduser.Email, token, "active", "ActiveEmail", "Please active your email");
-                return "Please confirm your email first, we have send activat to your E-mail";
-            }
-
-            var result = await _signInManager.CheckPasswordSignInAsync(finduser, login.Password, true);
-
-            if (result.Succeeded)
-            {
-                return genrateToken.GetAndCreateTokenAsync(finduser);
-            }
-
-            return "please check your email and password, something went wrong";
-        }
-        public async Task<bool> SendEmailForForgetPassword(string email)
-        {
-            var FindUser = await _userManager.FindByEmailAsync(email);
-            if (FindUser is null)
-            {
-                return false;
-            }
-            var token = await _userManager.GeneratePasswordResetTokenAsync(FindUser);
-
-            await SendEmail(FindUser.Email, token, "Reset-Password", "Reset Password", "click on button to Reset");
-
-            return true;
-        }
-        public async Task<bool> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
-        {
-            if (resetPasswordDto == null)
-            {
-                throw new ArgumentNullException(nameof(resetPasswordDto));
-            }
-            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(loginDto.Email );
             if (user == null)
             {
-                return false; 
+                throw new ArgumentException("Invalid username or password");
             }
-            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
-            return result.Succeeded;
-        }
-        public async Task<bool> ActiveAccount(ActiveDto activeDto)
-        {
-            var FindUser = await _userManager.FindByEmailAsync(activeDto.Email);
-            if (FindUser is null)
+            var result = await _signInManager.PasswordSignInAsync(user, loginDto.Password, false, false);
+            if (!result.Succeeded)
             {
-                return false;
+                throw new InvalidOperationException("Login failed");
             }
-
-            var res = await _userManager.ConfirmEmailAsync(FindUser , activeDto.Token);
-            if (res.Succeeded) 
-            {
-                return true;
-            }
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(FindUser);
-            await SendEmail(FindUser.Email, token, "active", "ActiveEmail", "Please active your email");
-            return false ;
+            return user;
         }
     }
 }

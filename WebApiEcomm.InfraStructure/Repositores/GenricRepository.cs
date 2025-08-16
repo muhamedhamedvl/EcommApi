@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using WebApiEcomm.Core.Interfaces;
 using WebApiEcomm.InfraStructure.Data;
 
@@ -13,6 +17,7 @@ namespace WebApiEcomm.InfraStructure.Repositories
         {
             _context = context;
         }
+
         public Task AddAsync(T entity)
         {
             if (entity is null)
@@ -22,6 +27,7 @@ namespace WebApiEcomm.InfraStructure.Repositories
             _context.Add(entity);
             return _context.SaveChangesAsync();
         }
+
         public async Task<int> CountAsync() => await _context.Set<T>().CountAsync();
         public Task<T> DeleteAsync(T entity)
         {
@@ -32,10 +38,12 @@ namespace WebApiEcomm.InfraStructure.Repositories
             _context.Remove(entity);
             return _context.SaveChangesAsync().ContinueWith(t => entity);
         }
+
         public Task<IReadOnlyList<T>> GetAllAsync()
         {
             return _context.Set<T>().ToListAsync().ContinueWith(t => (IReadOnlyList<T>)t.Result);
         }
+
         public Task<IReadOnlyList<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -48,6 +56,7 @@ namespace WebApiEcomm.InfraStructure.Repositories
             }
             return query.ToListAsync().ContinueWith(t => (IReadOnlyList<T>)t.Result);
         }
+
         public Task<T> GetByIdAsync(int id)
         {
             if (id <= 0)
@@ -56,6 +65,7 @@ namespace WebApiEcomm.InfraStructure.Repositories
             }
             return _context.Set<T>().FindAsync(id).AsTask();
         }
+
         public Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
         {
             if (id <= 0)
@@ -74,6 +84,7 @@ namespace WebApiEcomm.InfraStructure.Repositories
 
             return query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         }
+
         public Task<T> UpdateAsync(T entity)
         {
             if (entity is null)
