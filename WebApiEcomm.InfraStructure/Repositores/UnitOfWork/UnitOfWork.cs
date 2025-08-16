@@ -25,6 +25,7 @@ namespace WebApiEcomm.InfraStructure.Repositores.UnitOfWork
         private readonly UserManager<AppUser> userManager;
         private readonly IEmailService emailService;
         private readonly SignInManager<AppUser> signInManager;  
+        private readonly IGenrateToken token;
 
         public ICategoryRepository CategoryRepository { get; }
 
@@ -37,7 +38,8 @@ namespace WebApiEcomm.InfraStructure.Repositores.UnitOfWork
         public IAuth Auth { get; }
 
         public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService
-             , IConnectionMultiplexer redis, UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager)
+             , IConnectionMultiplexer redis, UserManager<AppUser> userManager, IEmailService emailService, 
+            SignInManager<AppUser> signInManager, IGenrateToken token)
         {
             this._context = context;
             this.mapper = mapper;
@@ -46,11 +48,12 @@ namespace WebApiEcomm.InfraStructure.Repositores.UnitOfWork
             this.userManager = userManager;
             this.emailService = emailService;
             this.signInManager = signInManager;
+            this.token = token;
             CategoryRepository = new CategoryRepository(_context);
             ProductRepository = new ProductRepository(_context, mapper, imageManagementService);
             PhotoRepository = new PhotoRepository(_context);
             CustomerBasketRepository = new CustomerBasketRepository(redis);
-            Auth = new AuthRepository(userManager , emailService , signInManager);
+            Auth = new AuthRepository(userManager, emailService, signInManager ,token);
 
         }
     }
