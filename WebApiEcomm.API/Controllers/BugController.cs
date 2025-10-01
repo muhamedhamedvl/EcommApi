@@ -6,9 +6,9 @@ using WebApiEcomm.Core.Interfaces.IUnitOfWork;
 namespace WebApiEcomm.API.Controllers
 {
 
-    public class BugController : BaseController
+    public class bugController : BaseController
     {
-        public BugController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
+        public bugController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
         {
 
 
