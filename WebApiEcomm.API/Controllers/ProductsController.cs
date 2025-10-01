@@ -16,7 +16,7 @@ namespace WebApiEcomm.API.Controllers
             this.imageManagementService = imageManagementService;
         }
 
-        [HttpGet("get-all")]
+        [HttpGet]
         public async Task<IActionResult> GetAllProducts([FromQuery]ProductParams productParams)
         {
             try
@@ -35,13 +35,13 @@ namespace WebApiEcomm.API.Controllers
             }
         }
 
-        [HttpGet("get-by-id/{id}")]
-        public async Task<IActionResult> GetProductById(int id)
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetProductById(int productId)
         {
             try
             {
                 var product = await _work.ProductRepository.GetByIdAsync(
-                    id,
+                    productId,
                     p => p.Category,
                     p => p.Photos
                 );
@@ -60,7 +60,7 @@ namespace WebApiEcomm.API.Controllers
             }
         }
 
-        [HttpPost("Add-Product")]
+        [HttpPost]
         public async Task<IActionResult> AddProduct(AddProductDto productdto)
         {
             try
@@ -70,7 +70,7 @@ namespace WebApiEcomm.API.Controllers
                 if (!isAdded)
                     return BadRequest(new ResponseApi(400, "Failed to add product."));
 
-                return Ok(new ResponseApi(200, "Product added successfully."));
+                return StatusCode(201, new ResponseApi(201, "product created"));
             }
             catch (Exception ex)
             {
@@ -78,30 +78,31 @@ namespace WebApiEcomm.API.Controllers
             }
         }
 
-        [HttpPut("Update-Product")]
-        public async Task<IActionResult> Update(UpdateProductDto updateProductDTO)
+        [HttpPut("{productId}")]
+        public async Task<IActionResult> Update(int productId, UpdateProductDto updateProductDTO)
         {
             try
             {
+                updateProductDTO.Id = productId;
                 await _work.ProductRepository.UpdateAsync(updateProductDTO);
-                return Ok(new ResponseApi(200));
+                return NoContent();
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("Delete-Product/{Id}")]
-        public async Task<IActionResult> delete(int Id)
+        [HttpDelete("{productId}")]
+        public async Task<IActionResult> delete(int productId)
         {
             try
             {
                 var product = await _work.ProductRepository
-                    .GetByIdAsync(Id, x => x.Photos, x => x.Category);
+                    .GetByIdAsync(productId, x => x.Photos, x => x.Category);
 
                 await _work.ProductRepository.DeleteAsync(product);
 
-                return Ok(new ResponseApi(200, "Product has been deleted"));
+                return NoContent();
             }
             catch (Exception ex)
             {
