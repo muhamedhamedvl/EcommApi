@@ -16,6 +16,7 @@ The backend is responsible for **product management**, **shopping basket handlin
 - **Swagger / OpenAPI**
 - **Specification Pattern**
 - **Repository & Unit of Work Pattern**
+- **NUnit (Unit Testing)**
 
 ---
 
@@ -42,6 +43,11 @@ ECommerce.sln                     # Solution file
 │   ├── Identity/                    # ASP.NET Core Identity setup
 │   ├── Repositories/                # Repository implementations
 │   └── Seed/                        # Initial database seeding
+
+├── UnitTests/                # UnitTests(Nunit)
+│   ├── API/                        # Controllers 
+│   ├── Core/                    # EmailStringTests,ParamsTests
+│   ├── InfraStructrue/                # Services Tests , Repositores Tests
 
 ```
 
