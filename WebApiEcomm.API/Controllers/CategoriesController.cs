@@ -8,9 +8,9 @@ using WebApiEcomm.Core.Interfaces.IUnitOfWork;
 
 namespace WebApiEcomm.API.Controllers
 {
-    public class CategoriesController : BaseController
+    public class categoriesController : BaseController
     {
-        public CategoriesController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
+        public categoriesController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
         {
         }
 
