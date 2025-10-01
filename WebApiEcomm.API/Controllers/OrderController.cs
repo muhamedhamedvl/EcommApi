@@ -7,7 +7,7 @@ using WebApiEcomm.Core.Services;
 
 namespace WebApiEcomm.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize]
     public class OrdersController : ControllerBase
@@ -17,7 +17,7 @@ namespace WebApiEcomm.API.Controllers
         {
             _orderService = orderService;
         }
-        [HttpPost("create-order")]
+        [HttpPost]
         public async Task<ActionResult> create(OrderDto orderDTO)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -28,7 +28,7 @@ namespace WebApiEcomm.API.Controllers
         }
 
 
-        [HttpGet("get-orders-for-user")]
+        [HttpGet]
         public async Task<ActionResult<IReadOnlyList<OrderToReturnDTO>>> getorders()
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -37,16 +37,16 @@ namespace WebApiEcomm.API.Controllers
         }
 
 
-        [HttpGet("get-order-by-id/{id}")]
-        public async Task<ActionResult<OrderToReturnDTO>> getOrderById(int id)
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<OrderToReturnDTO>> getOrderById(int orderId)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var order = await _orderService.GetOrderByIdAsync(id, email);
+            var order = await _orderService.GetOrderByIdAsync(orderId, email);
             return Ok(order);
         }
 
 
-        [HttpGet("get-delivery")]
+        [HttpGet("delivery-methods")]
         public async Task<ActionResult> GetDeliver()
         => Ok(await _orderService.GetDeliveryMethodAsync());
     }
