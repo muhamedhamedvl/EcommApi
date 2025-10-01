@@ -13,12 +13,12 @@ using WebApiEcomm.Core.Interfaces.IUnitOfWork;
 namespace WebApiEcomm.UnitTests.API.Controllers
 {
     [TestFixture]
-    public class bugControllerTests
+    public class bugcontrollerTests
     {
         private Mock<IUnitOfWork> _uowMock;
         private Mock<ICategoryRepository> _catRepoMock;
         private Mock<IMapper> _mapperMock;
-        private bugController _controller;
+        private bugcontroller _controller;
 
         [SetUp]
         public void SetUp()
@@ -28,7 +28,7 @@ namespace WebApiEcomm.UnitTests.API.Controllers
             _mapperMock = new Mock<IMapper>();
 
             _uowMock.Setup(u => u.CategoryRepository).Returns(_catRepoMock.Object);
-            _controller = new bugController(_uowMock.Object, _mapperMock.Object);
+            _controller = new bugcontroller(_uowMock.Object, _mapperMock.Object);
         }
 
         [Test]
