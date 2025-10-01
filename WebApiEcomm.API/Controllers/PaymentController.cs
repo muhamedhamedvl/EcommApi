@@ -7,7 +7,7 @@ using WebApiEcomm.Core.Services;
 
 namespace WebApiEcomm.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize]
     public class PaymentController : ControllerBase
@@ -17,7 +17,7 @@ namespace WebApiEcomm.API.Controllers
         {
             this.paymentService = paymentService;
         }
-        [HttpPost("Create/{basketId}")]
+        [HttpPost("baskets/{basketId}")]
         public async Task<ActionResult<CustomerBasket>> Create(string basketId , int deliveryid )
         {
             return await paymentService.CreateOrUpdatePaymentAsync(basketId , deliveryid);
