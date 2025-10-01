@@ -14,7 +14,7 @@ namespace WebApiEcomm.API.Controllers
         {
         }
 
-        [HttpGet("get-all")]
+        [HttpGet]
         public async Task<IActionResult> GetAllCategories()
         {
             try
@@ -31,12 +31,12 @@ namespace WebApiEcomm.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("get-by-id/{id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
+        [HttpGet("{categoryId}")]
+        public async Task<IActionResult> GetCategoryById(int categoryId)
         {
             try
             {
-                var category = await _work.CategoryRepository.GetByIdAsync(id);
+                var category = await _work.CategoryRepository.GetByIdAsync(categoryId);
                 if (category == null)
                 {
                     return BadRequest(new ResponseApi(400));
@@ -48,7 +48,7 @@ namespace WebApiEcomm.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving data: {ex.Message}");
             }
         }
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateCategory(CategoryDto categorydto)
         {
             if (categorydto == null)
@@ -59,39 +59,40 @@ namespace WebApiEcomm.API.Controllers
             {
                 var newCategory = mapper.Map<Category>(categorydto);
                 await _work.CategoryRepository.AddAsync(newCategory);
-                return Ok(new ResponseApi(200 , "Item has been added"));
+                return StatusCode(201 , new ResponseApi(201 , "category created"));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updatecategorydto)
+        [HttpPut("{categoryId}")]
+        public async Task<IActionResult> UpdateCategory(int categoryId, UpdateCategoryDto updatecategorydto)
         { 
             try
             {
                 var  category = mapper.Map<Category>(updatecategorydto);
+                category.Id = categoryId;
                 await _work.CategoryRepository.UpdateAsync(category);
-                return Ok(new ResponseApi(200 , "Item has been updated"));
+                return NoContent();
             }
             catch(Exception ex)
             {
                 return BadRequest (ex.Message);
             }
         }
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{categoryId}")]
+        public async Task<IActionResult> Delete(int categoryId)
         {
-            if(id <= 0)
+            if(categoryId <= 0)
             {
                 return BadRequest(new ResponseApi(400));
             }
             try
             {
-                var category = await _work.CategoryRepository.GetByIdAsync(id);
+                var category = await _work.CategoryRepository.GetByIdAsync(categoryId);
                 await _work.CategoryRepository.DeleteAsync(category);
-                return Ok(new ResponseApi(200, "Item has been deleted"));
+                return NoContent();
             }
             catch (Exception ex)
             {
