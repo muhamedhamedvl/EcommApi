@@ -16,14 +16,14 @@ using WebApiEcomm.Core.Sharing;
 namespace WebApiEcomm.UnitTests.API.Controllers
 {
     [TestFixture]
-    public class ProductsControllerTests
+    public class productsControllerTests
     {
         private Mock<IUnitOfWork> _mockUnitOfWork;
         private Mock<IProductRepository> _mockProductRepo;
         private Mock<IMapper> _mockMapper;
         private Mock<IImageManagementService> _mockImageService;
 
-        private ProductsController _controller;
+        private productsController _controller;
 
         [SetUp]
         public void SetUp()
@@ -36,7 +36,7 @@ namespace WebApiEcomm.UnitTests.API.Controllers
             // Wire repo to unit of work
             _mockUnitOfWork.Setup(u => u.ProductRepository).Returns(_mockProductRepo.Object);
 
-            _controller = new ProductsController(
+            _controller = new productsController(
                 _mockUnitOfWork.Object,
                 _mockMapper.Object,
                 _mockImageService.Object

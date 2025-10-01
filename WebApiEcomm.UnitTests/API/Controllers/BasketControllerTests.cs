@@ -12,11 +12,11 @@ using WebApiEcomm.Core.Interfaces;
 namespace WebApiEcomm.UnitTests.API.Controllers
 {
     [TestFixture]
-    public class BasketControllerTests
+    public class basketControllerTests
     {
         private Mock<IUnitOfWork> _mockUnitOfWork;
         private Mock<ICustomerBasketRepository> _mockBasketRepo;
-        private BasketController _controller;
+        private basketController _controller;
 
         [SetUp]
         public void Setup()
@@ -26,7 +26,7 @@ namespace WebApiEcomm.UnitTests.API.Controllers
             _mockUnitOfWork.Setup(u => u.CustomerBasketRepository).Returns(_mockBasketRepo.Object);
 
             var mockMapper = new Mock<IMapper>();
-            _controller = new BasketController(_mockUnitOfWork.Object, mockMapper.Object);
+            _controller = new basketController(_mockUnitOfWork.Object, mockMapper.Object);
         }
 
         [Test]

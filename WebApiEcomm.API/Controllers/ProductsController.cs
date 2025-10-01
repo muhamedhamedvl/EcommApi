@@ -8,10 +8,10 @@ using WebApiEcomm.Core.Sharing;
 
 namespace WebApiEcomm.API.Controllers
 {
-    public class ProductsController : BaseController
+    public class productsController : BaseController
     {
         private readonly IImageManagementService imageManagementService;
-        public ProductsController(IUnitOfWork work, IMapper mapper, IImageManagementService imageManagementService) : base(work, mapper)
+        public productsController(IUnitOfWork work, IMapper mapper, IImageManagementService imageManagementService) : base(work, mapper)
         {
             this.imageManagementService = imageManagementService;
         }

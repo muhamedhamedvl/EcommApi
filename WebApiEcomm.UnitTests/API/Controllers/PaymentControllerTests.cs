@@ -9,16 +9,16 @@ using WebApiEcomm.Core.Services;
 namespace WebApiEcomm.UnitTests.API.Controllers
 {
     [TestFixture]
-    public class PaymentControllerTests
+    public class paymentControllerTests
     {
         private Mock<IPaymentService> _mockPaymentService;
-        private PaymentController _controller;
+        private paymentController _controller;
 
         [SetUp]
         public void SetUp()
         {
             _mockPaymentService = new Mock<IPaymentService>();
-            _controller = new PaymentController(_mockPaymentService.Object);
+            _controller = new paymentController(_mockPaymentService.Object);
         }
 
         [Test]

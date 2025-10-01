@@ -13,16 +13,16 @@ using WebApiEcomm.Core.Services;
 namespace WebApiEcomm.UnitTests.API.Controllers
 {
     [TestFixture]
-    public class OrdersControllerTests
+    public class ordersControllerTests
     {
         private Mock<IOrderService> _orderServiceMock;
-        private OrdersController _controller;
+        private ordersController _controller;
 
         [SetUp]
         public void Setup()
         {
             _orderServiceMock = new Mock<IOrderService>();
-            _controller = new OrdersController(_orderServiceMock.Object);
+            _controller = new ordersController(_orderServiceMock.Object);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {

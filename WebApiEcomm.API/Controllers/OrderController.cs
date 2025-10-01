@@ -10,10 +10,10 @@ namespace WebApiEcomm.API.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize]
-    public class OrdersController : ControllerBase
+    public class ordersController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        public OrdersController(IOrderService orderService)
+        public ordersController(IOrderService orderService)
         {
             _orderService = orderService;
         }

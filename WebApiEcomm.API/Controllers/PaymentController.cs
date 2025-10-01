@@ -10,10 +10,10 @@ namespace WebApiEcomm.API.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize]
-    public class PaymentController : ControllerBase
+    public class paymentController : ControllerBase
     {
         private readonly IPaymentService paymentService;
-        public PaymentController(IPaymentService paymentService)
+        public paymentController(IPaymentService paymentService)
         {
             this.paymentService = paymentService;
         }

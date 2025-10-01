@@ -6,14 +6,14 @@ using WebApiEcomm.API.Controllers;
 namespace WebApiEcomm.UnitTests.API.Controllers
 {
     [TestFixture]
-    public class ErrorControllerTests
+    public class errorControllerTests
     {
-        private ErrorController _controller;
+        private errorController _controller;
 
         [SetUp]
         public void Setup()
         {
-            _controller = new ErrorController();
+            _controller = new errorController();
         }
 
         [Test]
