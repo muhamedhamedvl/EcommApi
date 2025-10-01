@@ -13,10 +13,10 @@ namespace WebApiEcomm.API.Controllers
         public BasketController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
         {
         }
-        [HttpGet("Get-Basket-Item/{id}")]
-        public async Task<IActionResult> GetBasket(string id)
+		[HttpGet("{basketId}")]
+		public async Task<IActionResult> GetBasket(string basketId)
         {
-            var res = await _work.CustomerBasketRepository.GetCustomerBasketAsync(id);
+			var res = await _work.CustomerBasketRepository.GetCustomerBasketAsync(basketId);
             if (res is null) 
             { 
                 return Ok(new CustomerBasket());
@@ -24,17 +24,17 @@ namespace WebApiEcomm.API.Controllers
             }
             return Ok(res);
         }
-        [HttpPut("update-Basket")]
+		[HttpPut]
         public async Task<IActionResult> Update(CustomerBasket customerBasket)
         {
             var basket = await _work.CustomerBasketRepository.UpdateCustomerBasketAsync(customerBasket);
-            return Ok(basket);
+			return Ok(basket);
         }
-        [HttpDelete("delete-basket-item/{id}")]
-        public async Task<IActionResult> DeleteById(string id)
+		[HttpDelete("{basketId}")]
+		public async Task<IActionResult> DeleteById(string basketId)
         {
-            var res = await _work.CustomerBasketRepository.DeleteCustomerBasketAsync(id);
-            return res ? Ok(new ResponseApi(200 , "Basket Deleted")) : BadRequest(new ResponseApi(400));
+			var res = await _work.CustomerBasketRepository.DeleteCustomerBasketAsync(basketId);
+			return res ? NoContent() : BadRequest(new ResponseApi(400));
         }
     }
 }
