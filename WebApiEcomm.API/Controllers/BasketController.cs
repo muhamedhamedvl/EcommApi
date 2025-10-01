@@ -8,9 +8,9 @@ using WebApiEcomm.Core.Interfaces.IUnitOfWork;
 namespace WebApiEcomm.API.Controllers
 {
 
-    public class BasketController : BaseController
+    public class basketController : BaseController
     {
-        public BasketController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
+        public basketController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
         {
         }
 		[HttpGet("{basketId}")]
