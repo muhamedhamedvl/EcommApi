@@ -79,20 +79,18 @@ namespace WebApiEcomm.UnitTests.API.Controllers
         }
 
         [Test]
-        public async Task DeleteById_WhenBasketDeleted_ReturnsOk()
+        public async Task DeleteById_WhenBasketDeleted_ReturnsNoContent()
         {
             // Arrange
             var basketId = "test123";
             _mockBasketRepo.Setup(r => r.DeleteCustomerBasketAsync(basketId)).ReturnsAsync(true);
 
             // Act
-            var result = await _controller.DeleteById(basketId) as OkObjectResult;
+            var result = await _controller.DeleteById(basketId) as NoContentResult;
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            var response = result.Value as ResponseApi;
-            Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Message, Is.EqualTo("Basket Deleted"));
+            Assert.That(result.StatusCode, Is.EqualTo(204));
         }
 
         [Test]
